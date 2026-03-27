@@ -1,9 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
+import IntroAnimation from './IntroAnimation'
 import Scrollytelling from './Scrollytelling'
 import './App.css'
 
 function App() {
   const [scrolled, setScrolled] = useState(false)
+  const [introComplete, setIntroComplete] = useState(false)
+  const [showContent, setShowContent] = useState(false)
+
+  // Prevent scrolling during intro
+  useEffect(() => {
+    if (!introComplete) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [introComplete])
 
   // Add a scroll listener just for the header styling
   useEffect(() => {
@@ -14,10 +29,21 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const handleIntroComplete = useCallback(() => {
+    setIntroComplete(true)
+    // Small delay before revealing content for smooth transition
+    setTimeout(() => {
+      setShowContent(true)
+    }, 100)
+  }, [])
+
   return (
     <div className="app-container">
+      {/* Intro Animation Overlay */}
+      {!introComplete && <IntroAnimation onComplete={handleIntroComplete} />}
+
       {/* Navigation */}
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''} ${showContent ? 'navbar-visible' : 'navbar-hidden'}`}>
         <div className="logo">AURA TIMEPIECES</div>
         <div className="nav-links">
           <a href="#collection">Collection</a>
@@ -27,14 +53,23 @@ function App() {
       </nav>
 
       {/* Hero Section */}
-      <section className="hero">
+      <section className={`hero ${showContent ? 'hero-revealed' : ''}`}>
+        {/* Floating Watch Images */}
+        <div className="hero-watches">
+          <img src="/assets/hero_watch_1.png" alt="" className="floating-watch watch-1" />
+          <img src="/assets/hero_watch_2.png" alt="" className="floating-watch watch-2" />
+          <img src="/assets/hero_watch_3.png" alt="" className="floating-watch watch-3" />
+        </div>
+
         <div className="hero-content">
           <p className="hero-subtitle">The new Genesis Chronograph. Engineered for those who command time.</p>
           <h1>Eternity in Motion.</h1>
-          <div className="scroll-indicator">
-            <span>Discover</span>
-            <div className="scroll-line"></div>
-          </div>
+        </div>
+
+        {/* Scroll indicator — outside hero-content so it's not behind heading */}
+        <div className="scroll-indicator">
+          <span>Discover</span>
+          <div className="scroll-line"></div>
         </div>
       </section>
 

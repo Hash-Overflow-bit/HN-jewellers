@@ -1,0 +1,213 @@
+/* ============================================
+   INTRO ANIMATION — Cinematic Luxury Reveal
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.intro-overlay.intro-exit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Ambient glow — rich gold light behind the text */
+.intro-ambient-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.06) 0%,
+    rgba(212, 175, 55, 0.02) 40%,
+    transparent 70%
+  );
+  animation: glowPulse 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Text container */
+.intro-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  z-index: 2;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+/* Tagline — small elegant text above title */
+.intro-tagline {
+  font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #d4af37;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: introFadeUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
+  margin-bottom: 1.5rem;
+}
+
+/* Gold divider line */
+.intro-divider {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #d4af37, transparent);
+  opacity: 0;
+  transform: scaleX(0);
+  animation: introExpandLine 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.8s forwards;
+  margin: 0.5rem 0;
+}
+
+/* Main title */
+.intro-title {
+  font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: introFadeUp 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s forwards;
+  line-height: 1.1;
+  margin: 0.5rem 0;
+  /* Subtle shimmer */
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #e8dcc8 25%,
+    #ffffff 50%,
+    #d4af37 75%,
+    #ffffff 100%
+  );
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: 
+    introFadeUp 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s forwards,
+    shimmer 6s ease-in-out infinite 2.5s;
+}
+
+/* Subtitle */
+.intro-subtitle {
+  font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+  font-size: clamp(0.9rem, 2vw, 1.35rem);
+  font-weight: 400;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: introFadeUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.8s forwards;
+  margin-top: 1.5rem;
+}
+
+/* Canvas for particle system */
+.intro-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.intro-canvas.active {
+  opacity: 1;
+}
+
+/* Film grain overlay */
+.intro-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+}
+
+/* ============================================
+   KEYFRAME ANIMATIONS
+   ============================================ */
+
+@keyframes introFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes introExpandLine {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  50% { background-position: 0% 0; }
+  100% { background-position: 100% 0; }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .intro-ambient-glow {
+    width: 350px;
+    height: 350px;
+  }
+  
+  .intro-divider {
+    width: 80px;
+  }
+  
+  .intro-tagline {
+    letter-spacing: 0.2em;
+  }
+  
+  .intro-subtitle {
+    letter-spacing: 0.2em;
+  }
+}
